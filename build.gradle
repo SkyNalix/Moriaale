@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id "com.github.johnrengelman.shadow" version "7.1.0"
+}
+
+
+repositories {
+    mavenCentral()
+}
+mainClassName = 'edu.moria.moriaale.Executor'
+archivesBaseName = 'Moriaale'
+
+shadowJar {
+    archiveFileName = archivesBaseName + ".jar"
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+compileJava {
+    targetCompatibility = '11'
+}
+
+javafx {
+    version = "16"
+    modules = ['javafx.controls', 'javafx.fxml','javafx.media']
+}
+
