@@ -5,11 +5,10 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.0"
 }
 
-
 repositories {
     mavenCentral()
 }
-mainClassName = 'edu.moria.moriaale.Executor'
+mainClassName = 'edu.moria.moriaale.App'
 archivesBaseName = 'Moriaale'
 
 shadowJar {
