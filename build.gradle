@@ -5,12 +5,22 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.0"
 }
 
-
 repositories {
     mavenCentral()
 }
-mainClassName = 'edu.moria.moriaale.Executor'
+
+dependencies {
+    compileOnly files('libs/javafx.controls.jar')
+    compileOnly files('libs/javafx.fxml.jar')
+}
+
+mainClassName = 'edu.moria.moriaale.MainClass'
 archivesBaseName = 'Moriaale'
+
+javafx {
+    version = "17"
+    modules = ['javafx.controls', 'javafx.fxml']
+}
 
 shadowJar {
     archiveFileName = archivesBaseName + ".jar"
@@ -18,13 +28,3 @@ shadowJar {
         attributes 'Main-Class': mainClassName
     }
 }
-
-compileJava {
-    targetCompatibility = '11'
-}
-
-javafx {
-    version = "16"
-    modules = ['javafx.controls', 'javafx.fxml','javafx.media']
-}
-
