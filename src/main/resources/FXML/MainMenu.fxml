@@ -80,7 +80,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label contentDisplay="CENTER" text="MoriaMines" GridPane.columnIndex="1">
+            <Label contentDisplay="CENTER" text="Moriaale" GridPane.columnIndex="1">
                <font>
                   <Font size="37.0" />
                </font>
