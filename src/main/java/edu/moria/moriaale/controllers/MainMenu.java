@@ -24,6 +24,8 @@ public class MainMenu {
 																			   ) );
 		choiceBox.setItems( elements );
 		choiceBox.setValue( elements.get( 0 ) );
+
+
 	}
 
 	@FXML

@@ -12,6 +12,7 @@ repositories {
 dependencies {
     compileOnly files('libs/javafx.controls.jar')
     compileOnly files('libs/javafx.fxml.jar')
+    compileOnly files('libs/javafx.base.jar')
 }
 
 mainClassName = 'edu.moria.moriaale.MainClass'
