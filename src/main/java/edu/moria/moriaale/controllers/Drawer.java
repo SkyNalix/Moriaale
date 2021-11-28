@@ -6,20 +6,17 @@ import edu.moria.moriaale.InputMenu;
 import edu.moria.moriaale.Utils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.image.PixelFormat;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 import java.awt.*;
-import java.nio.IntBuffer;
 
 
 public class Drawer {
-
-	private static final PixelFormat<IntBuffer> pixelFormat = PixelFormat.getIntArgbInstance();
 
 	public static Drawer instance;
 	public Thread thread;
@@ -49,16 +46,17 @@ public class Drawer {
 			thread.interrupt();
 			drawingPane = null;
 		}
-		Canvas canvas = new Canvas( inputs.maxWidth, inputs.maxHeight );
-		PixelWriter pw = canvas.getGraphicsContext2D().getPixelWriter();
-		drawingPane = new BorderPane( canvas );
+		drawingPane = new BorderPane();
 		gamePane.getChildren().add( drawingPane );
-
+		WritableImage buffer = new WritableImage( inputs.maxWidth, inputs.maxHeight );
+		PixelWriter pw = buffer.getPixelWriter();
 		DrawerThread generator = new DrawerThread( pw );
 
 		thread = new Thread( generator );
 		thread.setDaemon( true );
 		thread.start();
+
+		Drawer.instance.drawingPane.getChildren().add( new ImageView( buffer ) );
 	}
 
 	@FXML
@@ -70,14 +68,12 @@ public class Drawer {
 
 	@FXML
 	private void onZoomPressed() {
-		System.out.println( "TODO zoom" );
 		ZOOM *= 1.5;
 		draw();
 	}
 
 	@FXML
 	private void onUnzoomPressed() {
-		System.out.println( "TODO unzoom" );
 		ZOOM *= 0.5;
 		draw();
 	}
@@ -89,49 +85,35 @@ public class Drawer {
 
 	public class DrawerThread implements Runnable {
 
-		private final PixelWriter writer;
+		private final PixelWriter pw;
 
 		public DrawerThread( PixelWriter pw ) {
-			this.writer = pw;
+			this.pw = pw;
 		}
 
 		@Override
 		public void run() {
-			int blockHeight = 4;
-			IntBuffer buffer = IntBuffer.allocate( inputs.maxWidth * blockHeight );
+			for( int y = 0; y < inputs.maxHeight; y++ ) {
+				for( int x = 0; x < inputs.maxWidth; x++ ) {
+					int MAX_ITERATIONS = 1200;
+					Complexe c = new Complexe( inputs.CReal, inputs.CImaginary );
+					Complexe z = new Complexe(
+							  1.5 * ( x - inputs.maxWidth / 2.0 ) / ( 0.5 * ZOOM * inputs.maxWidth ) + MOVE_X,
+							  ( y - inputs.maxHeight / 2.0 ) / ( 0.5 * ZOOM * inputs.maxHeight ) + MOVE_Y
+					);
+					float i = Utils.divergenceIndex( MAX_ITERATIONS, z, c );
 
-			try {
-				for( int y = 0; y < inputs.maxHeight; y++ ) {
-					for( int x = 0; x < inputs.maxWidth; x++ ) {
-						int MAX_ITERATIONS = 1200;
-						Complexe c = new Complexe( inputs.CReal, inputs.CImaginary );
-						Complexe z = new Complexe(
-								  1.5 * ( x - inputs.maxWidth / 2.0 ) / ( 0.5 * ZOOM * inputs.maxWidth ) + MOVE_X,
-								  ( y - inputs.maxHeight / 2.0 ) / ( 0.5 * ZOOM * inputs.maxHeight ) + MOVE_Y
-						);
-						float i = Utils.divergenceIndex( MAX_ITERATIONS, z, c );
-						int color = Color.BLACK.getRGB();
-						if( i < MAX_ITERATIONS )
-							color = Color.HSBtoRGB( ( MAX_ITERATIONS / i ) % 1, 1, 1 );
+					int finalX = x;
+					int finalY = y;
+					int color = Color.WHITE.getRGB();
+					if( i < MAX_ITERATIONS )
+						color = Color.HSBtoRGB( ( MAX_ITERATIONS / i ) % 1, 1, 1 );
 
-						buffer.put( color );
-					}
-
-					if( y % blockHeight == blockHeight - 1 || y == inputs.maxHeight - 1 ) {
-						int regionY = y - y % blockHeight;
-						int regionHeight = Math.min( blockHeight, inputs.maxHeight - regionY );
-						Platform.runLater( () -> {
-							try {
-								writer.setPixels( 0, regionY, inputs.maxWidth - 1, regionHeight,
-												  pixelFormat, buffer, inputs.maxWidth - 1 );
-							} catch( ArrayIndexOutOfBoundsException ignored ) {
-							}
-						} );
-						buffer.clear();
-					}
-					Thread.sleep( 25 );
+					final int finalColor = color;
+					Platform.runLater( () -> {
+						pw.setArgb( finalX, finalY, finalColor );
+					} );
 				}
-			} catch( InterruptedException ignored ) {
 			}
 		}
 

@@ -17,13 +17,13 @@ public class InputMenu {
 		dialogPane.getButtonTypes().addAll( ButtonType.OK, ButtonType.CANCEL );
 		List<Node> entries = new ArrayList<>();
 		entries.add( new Label( "Constant's real" ) );
-		entries.add( new TextField( String.valueOf( -0.7269 ) ) );
-		entries.add( new Label( "Contant's imaginary" ) );
-		entries.add( new TextField( String.valueOf( 0.1889 ) ) );
+		entries.add( new TextField( String.valueOf( 0.285 ) ) );
+		entries.add( new Label( "Constant's imaginary" ) );
+		entries.add( new TextField( String.valueOf( 0.01 ) ) );
 		entries.add( new Label( "Max Width" ) );
-		entries.add( new TextField( String.valueOf( 300 ) ) );
+		entries.add( new TextField( String.valueOf( 500 ) ) );
 		entries.add( new Label( "Max Height" ) );
-		entries.add( new TextField( String.valueOf( 300 ) ) );
+		entries.add( new TextField( String.valueOf( 500 ) ) );
 
 		VBox vbox = new VBox();
 		for( Node entry : entries )
