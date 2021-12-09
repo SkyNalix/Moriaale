@@ -14,12 +14,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 
 public class Drawer {
 
 	public static Drawer instance;
-	public Thread thread;
+	public ArrayList<Thread> threads = new ArrayList<>();
 
 	public Pane gamePane;
 	public BorderPane drawingPane;
@@ -43,26 +44,34 @@ public class Drawer {
 	public void draw() {
 		if( drawingPane != null ) {
 			drawingPane.getChildren().clear();
-			thread.interrupt();
+			for( Thread thread : threads ) {
+				thread.interrupt();
+				threads.clear();
+			}
 			drawingPane = null;
 		}
 		drawingPane = new BorderPane();
 		gamePane.getChildren().add( drawingPane );
 		WritableImage buffer = new WritableImage( inputs.maxWidth, inputs.maxHeight );
 		PixelWriter pw = buffer.getPixelWriter();
-		DrawerThread generator = new DrawerThread( pw );
 
-		thread = new Thread( generator );
-		thread.setDaemon( true );
-		thread.start();
+		int nbBlock = 3;
+		int blockSize = ( inputs.maxHeight / nbBlock );
+		for( int y = 0; y < nbBlock; y++ ) {
+			int startY = y * blockSize;
+			DrawerThread generator = new DrawerThread( pw, startY, startY + blockSize );
+			Platform.runLater( generator );
+		}
 
 		Drawer.instance.drawingPane.getChildren().add( new ImageView( buffer ) );
 	}
 
 	@FXML
 	private void onExitPressed() {
-		if( thread != null )
+		for( Thread thread : threads ) {
 			thread.interrupt();
+			threads.clear();
+		}
 		App.transferTo( Utils.GUI.MAIN_MENU );
 	}
 
@@ -86,14 +95,18 @@ public class Drawer {
 	public class DrawerThread implements Runnable {
 
 		private final PixelWriter pw;
+		private final int minY;
+		private final int maxY;
 
-		public DrawerThread( PixelWriter pw ) {
+		public DrawerThread( PixelWriter pw, int minY, int maxY ) {
 			this.pw = pw;
+			this.minY = minY;
+			this.maxY = maxY;
 		}
 
 		@Override
 		public void run() {
-			for( int y = 0; y < inputs.maxHeight; y++ ) {
+			for( int y = minY; y < maxY; y++ ) {
 				for( int x = 0; x < inputs.maxWidth; x++ ) {
 					int MAX_ITERATIONS = 1200;
 					Complexe c = new Complexe( inputs.CReal, inputs.CImaginary );
@@ -103,16 +116,12 @@ public class Drawer {
 					);
 					float i = Utils.divergenceIndex( MAX_ITERATIONS, z, c );
 
+					int color = Color.HSBtoRGB((float)i/MAX_ITERATIONS, 0.7f, 0.7f);
+
 					int finalX = x;
 					int finalY = y;
-					int color = Color.WHITE.getRGB();
-					if( i < MAX_ITERATIONS )
-						color = Color.HSBtoRGB( ( MAX_ITERATIONS / i ) % 1, 1, 1 );
-
 					final int finalColor = color;
-					Platform.runLater( () -> {
-						pw.setArgb( finalX, finalY, finalColor );
-					} );
+					pw.setArgb( finalX, finalY, finalColor );
 				}
 			}
 		}
