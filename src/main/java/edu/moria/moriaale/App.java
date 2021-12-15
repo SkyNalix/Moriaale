@@ -35,7 +35,7 @@ public class App extends Application {
 		ChangeListener<Number> stageSizeListener = ( observable, oldValue, newValue ) -> {
 			ButtonBar buttonBar = Drawer.instance.buttonBar;
 			buttonBar.setLayoutX( ( primaryStage.getWidth() - buttonBar.getWidth() ) / 2 );
-			buttonBar.setLayoutY( primaryStage.getHeight() - ( 2 * buttonBar.getHeight() ) );
+			buttonBar.setLayoutY( primaryStage.getHeight() - ( 1.3* buttonBar.getHeight() ) );
 		};
 		primaryStage.widthProperty().addListener( stageSizeListener );
 		primaryStage.heightProperty().addListener( stageSizeListener );

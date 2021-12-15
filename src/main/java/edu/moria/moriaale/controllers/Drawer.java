@@ -27,16 +27,15 @@ public class Drawer {
 	public ButtonBar buttonBar;
 
 	public double ZOOM = 1.0;
-	public double MOVE_X = 0;
-	public double MOVE_Y = 0;
+	public double MOVE_X = 0.1;
+	public double MOVE_Y = 0.1;
 	public InputMenu.Inputs inputs;
 
 
 	public void initialize() {
 		Drawer.instance = this;
 		inputs = InputMenu.showDialog();
-		if( inputs == null )
-			onExitPressed();
+		if( inputs == null )Platform.runLater( () -> App.transferTo( Utils.GUI.MAIN_MENU ) );
 		draw();
 		refreshButtonsPosition();
 	}
@@ -55,15 +54,15 @@ public class Drawer {
 		WritableImage buffer = new WritableImage( inputs.maxWidth, inputs.maxHeight );
 		PixelWriter pw = buffer.getPixelWriter();
 
-		int nbBlock = 3;
+		int nbBlock = 4;
 		int blockSize = ( inputs.maxHeight / nbBlock );
 		for( int y = 0; y < nbBlock; y++ ) {
 			int startY = y * blockSize;
 			DrawerThread generator = new DrawerThread( pw, startY, startY + blockSize );
 			Platform.runLater( generator );
 		}
-
 		Drawer.instance.drawingPane.getChildren().add( new ImageView( buffer ) );
+
 	}
 
 	@FXML
@@ -87,9 +86,33 @@ public class Drawer {
 		draw();
 	}
 
+	@FXML
+	private void onMoveUpPressed() {
+		MOVE_Y -= 0.2 / ZOOM;
+		draw();
+	}
+
+	@FXML
+	private void onMoveDownPressed() {
+		MOVE_Y += 0.2 / ZOOM;
+		draw();
+	}
+
+	@FXML
+	private void onMoveLeftPressed() {
+		MOVE_X -= 0.2 / ZOOM;
+		draw();
+	}
+
+	@FXML
+	private void onMoveRightPressed() {
+		MOVE_X += 0.2 / ZOOM;
+		draw();
+	}
+
 	public void refreshButtonsPosition() {
-		buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - buttonBar.getWidth() ) / 2 - 132.5 );
-		buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * buttonBar.getHeight() ) - 89 );
+		buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - buttonBar.getWidth() ) / 2 - 155 );
+		buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * buttonBar.getHeight() ) - 110 );
 	}
 
 	public class DrawerThread implements Runnable {
@@ -116,12 +139,9 @@ public class Drawer {
 					);
 					float i = Utils.divergenceIndex( MAX_ITERATIONS, z, c );
 
-					int color = Color.HSBtoRGB((float)i/MAX_ITERATIONS, 0.7f, 0.7f);
+					int color = Color.HSBtoRGB( i / MAX_ITERATIONS, 0.7f, 0.7f );
 
-					int finalX = x;
-					int finalY = y;
-					final int finalColor = color;
-					pw.setArgb( finalX, finalY, finalColor );
+					pw.setArgb( x, y, color );
 				}
 			}
 		}
