@@ -10,9 +10,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly files('libs/javafx.controls.jar')
-    compileOnly files('libs/javafx.fxml.jar')
-    compileOnly files('libs/javafx.base.jar')
+    implementation(files('libs/javafx.controls.jar'))
+    implementation(files('libs/javafx.fxml.jar'))
+    implementation(files('libs/javafx.swing.jar'))
 }
 
 mainClassName = 'edu.moria.moriaale.MainClass'
@@ -25,7 +25,4 @@ javafx {
 
 shadowJar {
     archiveFileName = archivesBaseName + ".jar"
-    manifest {
-        attributes 'Main-Class': mainClassName
-    }
 }
