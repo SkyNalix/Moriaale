@@ -11,9 +11,9 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.moria.moriaale.controllers.Drawer">
    <children>
       <Pane fx:id="gamePane" prefHeight="400.0" prefWidth="800.0" />
-      <ButtonBar fx:id="buttonBar" layoutX="208.0" layoutY="300.0" prefHeight="85.0" prefWidth="390.0">
+      <ButtonBar fx:id="buttonBar" layoutX="186.0" layoutY="300.0" prefHeight="71.0" prefWidth="412.0">
         <buttons>
-            <HBox prefHeight="76.0" prefWidth="378.0">
+            <HBox prefHeight="121.0" prefWidth="425.0">
                <children>
                   <BorderPane prefHeight="83.0" prefWidth="80.0">
                      <top>
@@ -29,7 +29,7 @@
                         <Button mnemonicParsing="false" onAction="#onMoveRightPressed" text="→" BorderPane.alignment="CENTER" />
                      </right>
                   </BorderPane>
-                  <Button fx:id="zoomButton" mnemonicParsing="false" onAction="#onZoomPressed" prefHeight="43.0" prefWidth="44.0" text="+">
+                  <Button fx:id="zoomButton" maxHeight="43.0" maxWidth="46.0" minHeight="43.0" minWidth="46.0" mnemonicParsing="false" onAction="#onZoomPressed" prefHeight="43.0" prefWidth="46.0" text="+">
                      <font>
                         <Font size="21.0" />
                      </font>
@@ -37,7 +37,7 @@
                         <Insets left="10.0" top="20.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="unZoomButton" mnemonicParsing="false" onAction="#onUnzoomPressed" prefHeight="43.0" prefWidth="46.0" text="-">
+                  <Button fx:id="unZoomButton" maxHeight="43.0" maxWidth="45.0" minHeight="42.0" minWidth="45.0" mnemonicParsing="false" onAction="#onUnzoomPressed" prefHeight="43.0" prefWidth="45.0" text="-">
                      <font>
                         <Font size="21.0" />
                      </font>
