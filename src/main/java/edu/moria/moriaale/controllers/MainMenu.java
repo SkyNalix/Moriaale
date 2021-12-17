@@ -18,9 +18,7 @@ public class MainMenu {
 	@FXML
 	public void initialize() {
 		ObservableList<String> elements = FXCollections.observableList( List.of(
-				  "El",
-				  "Psy",
-				  "Congroo"
+				  "Julia Set"
 																			   ) );
 		choiceBox.setItems( elements );
 		choiceBox.setValue( elements.get( 0 ) );
@@ -29,8 +27,7 @@ public class MainMenu {
 	}
 
 	@FXML
-	private void drawFractalPressed() { // Start new game
-		System.out.printf( "Selected : %s%n", choiceBox.getValue() );
+	private void drawFractalPressed() {
 		App.transferTo( Utils.GUI.DRAWER );
 	}
 
