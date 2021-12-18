@@ -11,9 +11,12 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -69,8 +72,14 @@ public class Drawer {
 		int blockSize = ( inputs.maxHeight / nbBlock );
 		for( int y = 0; y < nbBlock; y++ ) {
 			int startY = y * blockSize;
-			DrawerThread generator = new DrawerThread( pw, startY, startY + blockSize );
+			if(MainMenu.choix.equals("Mandelbrot")){
+				DrawerThread generator = new DrawerThread( pw, startY, startY + blockSize,MainMenu.choix ).getMandelBrot();
+				
+				Platform.runLater( generator );
+			}else{
+			DrawerThread generator = new DrawerThread( pw, startY, startY + blockSize,MainMenu.choix );	
 			Platform.runLater( generator );
+			}
 		}
 		Drawer.instance.drawingPane.getChildren().add( new ImageView( buffer ) );
 
@@ -124,26 +133,55 @@ public class Drawer {
 
 	@FXML
 	private void onMoveUpPressed() {
-		MOVE_Y -= 0.2 / ZOOM;
+		if(MainMenu.choix.equals("Mandelbrot")){
+			MOVE_Y -= 50 / ZOOM;
+		}else{
+			MOVE_Y -= 0.2 / ZOOM;
+		}
 		draw();
-	}
+	} 
 
 	@FXML
 	private void onMoveDownPressed() {
-		MOVE_Y += 0.2 / ZOOM;
+		if(MainMenu.choix.equals("Mandelbrot")){
+			MOVE_Y += 50 / ZOOM;
+		}else{
+			MOVE_Y += 0.2 / ZOOM;
+		}
 		draw();
+		
 	}
 
 	@FXML
 	private void onMoveLeftPressed() {
-		MOVE_X -= 0.2 / ZOOM;
+		if(MainMenu.choix.equals("Mandelbrot")){
+			MOVE_X -= 50 / ZOOM;
+		}else{
+			MOVE_X -= 0.2 / ZOOM;
+		}
 		draw();
 	}
 
 	@FXML
 	private void onMoveRightPressed() {
-		MOVE_X += 0.2 / ZOOM;
+		if(MainMenu.choix.equals("Mandelbrot")){
+			MOVE_X += 50 / ZOOM;
+		}else{
+			MOVE_X += 0.2 / ZOOM;
+		}
 		draw();
+	}
+
+	@FXML
+	private  void newDrawer(){
+		App nouveau = new App();
+		Stage x = new Stage();
+		try {
+			nouveau.start(x);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
 	}
 
 	public void refreshButtonsPosition() {
@@ -156,11 +194,13 @@ public class Drawer {
 		private final PixelWriter pw;
 		private final int minY;
 		private final int maxY;
+		private final String nom;
 
-		public DrawerThread( PixelWriter pw, int minY, int maxY ) {
+		public DrawerThread( PixelWriter pw, int minY, int maxY,String nom ) {
 			this.pw = pw;
 			this.minY = minY;
 			this.maxY = maxY;
+			this.nom = nom;
 		}
 
 		@Override
@@ -180,6 +220,48 @@ public class Drawer {
 					pw.setArgb( x, y, color );
 				}
 			}
+		}
+
+		public DrawerThread  getMandelBrot(){
+			DrawerThread mandel = new DrawerThread(this.pw, this.minY, this.maxY,this.nom){
+				@Override
+				public void run(){
+					
+					double x1= -1.5 ;
+					double y1= -1.2 ;
+
+					if(ZOOM == 1){
+						ZOOM = 100;
+					}
+					
+					int iter_max=1200;
+
+					Complexe z = new Complexe(0,0);
+					Complexe c = new Complexe(0,0);
+					for( int y = minY; y < maxY; y++ ) {
+						for( int x = 0; x < inputs.maxWidth; x++ ) {       
+							z.real = 0;
+							z.imaginary = 0;
+							c.real = (double) x/ZOOM + x1 + MOVE_X;
+							c.imaginary = (double) y/ZOOM + y1 + MOVE_Y;
+							int i=0;
+							do{
+								double tmp = z.real;
+								z.real = z.real*z.real - z.imaginary*z.imaginary + c.real;
+								z.imaginary = 2*z.imaginary*tmp + c.imaginary;
+								i = i+1;
+							}while(z.real*z.real + z.imaginary*z.imaginary < 4 && i <iter_max);
+							
+							if(i==iter_max){ //dessine le pixel de la couleur de la fractale
+								pw.setArgb( x, y,  Color.HSBtoRGB((float)i/iter_max, 0.7f, 0.7f) );
+							}else{ //dessine le pixel de la couleur de remplissage
+								pw.setArgb( x, y,  Color.HSBtoRGB((float)i/iter_max, 0.3f, 0.3f) );
+							}
+						}
+					}
+				}
+			};
+			return mandel;
 		}
 
 	}
