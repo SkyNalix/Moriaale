@@ -1,6 +1,7 @@
 package edu.moria.moriaale;
 
 import edu.moria.moriaale.controllers.Drawer;
+import edu.moria.moriaale.fractals.Fractal;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
@@ -32,8 +33,8 @@ public class App extends Application {
 		}
 		primaryStage.getScene().setRoot( mainInstance.layout );
 		primaryStage.setTitle( "Moriaale - " + destination.name );
+
 		ChangeListener<Number> stageSizeListener = ( observable, oldValue, newValue ) -> {
-			
 			ButtonBar buttonBar = Drawer.instance2.buttonBar;
 			buttonBar.setLayoutX( ( primaryStage.getWidth() - buttonBar.getWidth() ) / 2 );
 			buttonBar.setLayoutY( primaryStage.getHeight() - ( 1.3* buttonBar.getHeight() ) );

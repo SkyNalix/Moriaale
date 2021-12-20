@@ -2,6 +2,7 @@ package edu.moria.moriaale.controllers;
 
 import edu.moria.moriaale.App;
 import edu.moria.moriaale.Utils;
+import edu.moria.moriaale.fractals.Fractal;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,25 +12,24 @@ import javafx.scene.control.ChoiceBox;
 import java.util.List;
 
 public class MainMenu {
-	static String choix = "Julia Set";
+
+	public static Fractal chosenFractal = Fractal.JULIA;
 	@FXML
 	ChoiceBox<String> choiceBox;
 
 	@FXML
 	public void initialize() {
 		ObservableList<String> elements = FXCollections.observableList( List.of(
-				  "Julia Set",
-				  "Mandelbrot"
+				  Fractal.JULIA.name,
+				  Fractal.MANDELBROT.name
 																			   ) );
 		choiceBox.setItems( elements );
 		choiceBox.setValue( elements.get( 0 ) );
-
-
 	}
 
 	@FXML
 	private void drawFractalPressed() {
-		choix = choiceBox.getValue();
+		chosenFractal = Fractal.valueOf( choiceBox.getValue().toUpperCase() );
 		App.transferTo( Utils.GUI.DRAWER );
 	}
 
