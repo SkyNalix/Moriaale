@@ -30,7 +30,6 @@ public class MainMenu {
 	@FXML
 	private void drawFractalPressed() {
 		choix = choiceBox.getValue();
-		System.out.println("Drawer " + Drawer.instance2);
 		App.mainInstance.transferTo(Utils.GUI.DRAWER);
 	}
 

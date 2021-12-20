@@ -35,7 +35,6 @@ public class App extends Application {
 	}
 
 	public  void transferTo( Utils.GUI destination ) {
-		//Stage primaryStage = mainInstance.primaryStage;
 		Stage primaryStage = this.secondInstance.primaryStage;
 		try {
 			mainInstance.layout = Utils.getParentFromResource( destination );
@@ -44,11 +43,8 @@ public class App extends Application {
 			e.printStackTrace();
 		}
 		primaryStage.getScene().setRoot( mainInstance.layout );
-	//	primaryStage.getScene().setRoot( secondInstance.layout );
 
 		primaryStage.setTitle( "Moriaale - " + destination.name );
-		Drawer x = new Drawer(); System.out.println(x.instance2 == null); 
-		//if(Drawer.instance2 == null){System.out.println("null");}
 		ChangeListener<Number> stageSizeListener = ( observable, oldValue, newValue ) -> {
 			ButtonBar buttonBar = Drawer.instance2.buttonBar;
 			buttonBar.setLayoutX( ( primaryStage.getWidth() - buttonBar.getWidth() ) / 2 );

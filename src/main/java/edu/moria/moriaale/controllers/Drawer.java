@@ -54,13 +54,11 @@ public class Drawer {
 
 	public void initialize() {
 		this.instance = this;
+		instance2 = this;
 		inputs = InputMenu.showDialog();
 		App tmp = new App();
 		if( inputs == null ) Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
-
 		this.app = tmp.getSecondInstance();
-		
-		//if( inputs == null ) Platform.runLater( () -> this.app.secondInstance.transferTo( Utils.GUI.MAIN_MENU ) );
 
 		this.draw();
 		refreshButtonsPosition();
@@ -68,7 +66,7 @@ public class Drawer {
 
 	public void draw() {
 		if( drawingPane != null ) {
-			drawingPane.getChildren().clear(); // le clear supprime l'image actuel quand on en a 2
+			drawingPane.getChildren().clear();
 			for( Thread thread : threads ) {
 				thread.interrupt();
 				threads.clear();
@@ -80,7 +78,6 @@ public class Drawer {
 
 		if( inputs == null ) {
 			Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
-			//Platform.runLater( () -> this.app.secondInstance.transferTo(Utils.GUI.MAIN_MENU) );
 			return;
 		}
 		buffer = new WritableImage( inputs.maxWidth, inputs.maxHeight );
@@ -109,12 +106,10 @@ public class Drawer {
 
 	@FXML
 	private void onToImagePressed() {
-
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add( new FileChooser.ExtensionFilter( "PNG", "*.png" ) );
-
-		//File file = fileChooser.showSaveDialog( App.mainInstance.primaryStage );
-		File file = fileChooser.showSaveDialog( this.app.secondInstance.primaryStage);
+		File file = fileChooser.showSaveDialog( App.mainInstance.primaryStage );
+		
 		if( file != null ) {
 			String fileName = file.getName();
 
@@ -139,16 +134,14 @@ public class Drawer {
 			threads.clear();
 		}
 		this.app.primaryStage.close();
-		//this.app.secondInstance.transferTo(Utils.GUI.MAIN_MENU);
 	}
 
 	@FXML
 	private void newDrawer(){
-		App z = new App();	//this.app = new App();
+		App z = new App();
 		Stage x = new Stage();
 		try {
 			z.start(x);
-			//this.app.start(x);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -211,8 +204,6 @@ public class Drawer {
 	
 
 	public void refreshButtonsPosition() {
-		//instance.buttonBar.setLayoutX( ( this.app.secondInstance.primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
-		//instance.buttonBar.setLayoutY( this.app.secondInstance.primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
 		instance.buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
 		instance.buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
 	}
