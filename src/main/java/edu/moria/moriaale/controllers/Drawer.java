@@ -59,7 +59,6 @@ public class Drawer {
 		inputs = InputMenu.showDialog();
 
 		App tmp = new App();
-		System.out.println("Envoie  a Transfer " + this.instance);
 		if( inputs == null ) Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
 		this.app = tmp.getSecondInstance();
 
@@ -80,7 +79,6 @@ public class Drawer {
 		gamePane.getChildren().add( drawingPane );
 
 		if( inputs == null ) {
-			System.out.println("Envoie de Instance Actuel a Transfer " + this.instance);
 			Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
 			return;
 		}
@@ -137,7 +135,6 @@ public class Drawer {
 			thread.interrupt();
 			threads.clear();
 		}
-		//this.app.primaryStage.close();
 		this.app.transferTo(Utils.GUI.MAIN_MENU);
 	}
 

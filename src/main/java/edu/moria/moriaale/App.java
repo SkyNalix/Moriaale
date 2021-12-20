@@ -1,6 +1,7 @@
 package edu.moria.moriaale;
 
 import edu.moria.moriaale.controllers.Drawer;
+import edu.moria.moriaale.controllers.MainMenu;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Parent;
@@ -41,6 +42,7 @@ public class App extends Application {
 
 	public  void transferTo( Utils.GUI destination ) {
 		Stage primaryStage = this.secondInstance.primaryStage;
+		MainMenu.sortie = this.secondInstance;
 		try {
 			mainInstance.layout = Utils.getParentFromResource( destination );
 			
@@ -48,7 +50,6 @@ public class App extends Application {
 			e.printStackTrace();
 		}
 		primaryStage.getScene().setRoot( mainInstance.layout );
-		//primaryStage.getScene().setRoot( this.secondInstance.layout );
 
 		primaryStage.setTitle( "Moriaale - " + destination.name );
 		ChangeListener<Number> stageSizeListener = ( observable, oldValue, newValue ) -> {
