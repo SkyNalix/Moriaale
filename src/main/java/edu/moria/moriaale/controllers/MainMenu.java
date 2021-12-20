@@ -11,14 +11,15 @@ import javafx.scene.control.ChoiceBox;
 import java.util.List;
 
 public class MainMenu {
-
+	static String choix = "Julia Set";
 	@FXML
 	ChoiceBox<String> choiceBox;
 
 	@FXML
 	public void initialize() {
 		ObservableList<String> elements = FXCollections.observableList( List.of(
-				  "Julia Set"
+				  "Julia Set",
+				  "Mandelbrot"
 																			   ) );
 		choiceBox.setItems( elements );
 		choiceBox.setValue( elements.get( 0 ) );
@@ -28,6 +29,7 @@ public class MainMenu {
 
 	@FXML
 	private void drawFractalPressed() {
+		choix = choiceBox.getValue();
 		App.transferTo( Utils.GUI.DRAWER );
 	}
 
