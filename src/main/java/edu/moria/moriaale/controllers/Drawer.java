@@ -54,7 +54,7 @@ public class Drawer {
 
 	public void initialize() {
 		this.instance = this;
-		instance2 = this;
+		instance2 = this;  //le problème était là
 		inputs = InputMenu.showDialog();
 		App tmp = new App();
 		if( inputs == null ) Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
