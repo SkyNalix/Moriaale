@@ -18,6 +18,9 @@ public class App extends Application {
 	public static App mainInstance;
 	public App secondInstance;
 
+	public  Drawer actuel;
+	public boolean change = false;
+
 	public Parent layout;
 	public Scene scene;
 	public Stage primaryStage;
@@ -34,6 +37,8 @@ public class App extends Application {
 		return this.secondInstance;
 	}
 
+
+
 	public  void transferTo( Utils.GUI destination ) {
 		Stage primaryStage = this.secondInstance.primaryStage;
 		try {
@@ -43,10 +48,16 @@ public class App extends Application {
 			e.printStackTrace();
 		}
 		primaryStage.getScene().setRoot( mainInstance.layout );
+		//primaryStage.getScene().setRoot( this.secondInstance.layout );
 
 		primaryStage.setTitle( "Moriaale - " + destination.name );
 		ChangeListener<Number> stageSizeListener = ( observable, oldValue, newValue ) -> {
-			ButtonBar buttonBar = Drawer.instance2.buttonBar;
+			if(this.change == false){
+				this.change = true;
+				this.actuel = Drawer.instance2;
+			}
+			ButtonBar buttonBar = this.actuel.buttonBar; 
+
 			buttonBar.setLayoutX( ( primaryStage.getWidth() - buttonBar.getWidth() ) / 2 );
 			buttonBar.setLayoutY( primaryStage.getHeight() - ( 1.3* buttonBar.getHeight() ) );
 		};

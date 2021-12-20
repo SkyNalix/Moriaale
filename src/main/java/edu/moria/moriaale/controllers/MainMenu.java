@@ -8,9 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 
+import javafx.stage.Stage;
+
 import java.util.List;
 
 public class MainMenu {
+	Stage x;
+	
 	static String choix = "Julia Set";
 	@FXML
 	ChoiceBox<String> choiceBox;
@@ -34,7 +38,8 @@ public class MainMenu {
 	}
 
 	public void exitButtonPressed() {
-		Platform.exit();
+		
+		//Platform.exit();
 	}
 
 }

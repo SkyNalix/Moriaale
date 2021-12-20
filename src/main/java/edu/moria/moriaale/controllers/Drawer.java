@@ -4,6 +4,7 @@ import edu.moria.moriaale.App;
 import edu.moria.moriaale.Complexe;
 import edu.moria.moriaale.InputMenu;
 import edu.moria.moriaale.Utils;
+import edu.moria.moriaale.Utils.GUI;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -56,7 +57,9 @@ public class Drawer {
 		this.instance = this;
 		instance2 = this;  //le problème était là
 		inputs = InputMenu.showDialog();
+
 		App tmp = new App();
+		System.out.println("Envoie  a Transfer " + this.instance);
 		if( inputs == null ) Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
 		this.app = tmp.getSecondInstance();
 
@@ -77,6 +80,7 @@ public class Drawer {
 		gamePane.getChildren().add( drawingPane );
 
 		if( inputs == null ) {
+			System.out.println("Envoie de Instance Actuel a Transfer " + this.instance);
 			Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
 			return;
 		}
@@ -133,7 +137,8 @@ public class Drawer {
 			thread.interrupt();
 			threads.clear();
 		}
-		this.app.primaryStage.close();
+		//this.app.primaryStage.close();
+		this.app.transferTo(Utils.GUI.MAIN_MENU);
 	}
 
 	@FXML
@@ -204,8 +209,10 @@ public class Drawer {
 	
 
 	public void refreshButtonsPosition() {
-		instance.buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
-		instance.buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
+		//instance.buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
+		//instance.buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
+		instance.buttonBar.setLayoutX( ( this.app.getSecondInstance().primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
+		instance.buttonBar.setLayoutY( this.app.getSecondInstance().primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
 	}
 
 	public class DrawerThread implements Runnable {
