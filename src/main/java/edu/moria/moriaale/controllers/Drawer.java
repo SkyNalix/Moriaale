@@ -4,6 +4,7 @@ import edu.moria.moriaale.App;
 import edu.moria.moriaale.Complexe;
 import edu.moria.moriaale.InputMenu;
 import edu.moria.moriaale.Utils;
+import edu.moria.moriaale.Utils.GUI;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -27,9 +28,10 @@ import java.util.ArrayList;
 
 public class Drawer {
 
-	public  Drawer instance;
+	public Drawer instance;
 	public static Drawer instance2;
 	public ArrayList<Thread> threads = new ArrayList<>();
+	public App app;
 
 	public Pane gamePane;
 	public BorderPane drawingPane;
@@ -45,8 +47,7 @@ public class Drawer {
 	
 	public Drawer getInstance(){
 		if( this.instance == null){
-			instance = instance2;
-			
+			instance = instance2;		
 			return instance2;
 		}
 		return this.instance;
@@ -54,15 +55,20 @@ public class Drawer {
 
 	public void initialize() {
 		this.instance = this;
+		instance2 = this;  //le problème était là
 		inputs = InputMenu.showDialog();
-		if( inputs == null ) Platform.runLater( () -> App.transferTo( Utils.GUI.MAIN_MENU ) );
+
+		App tmp = new App();
+		if( inputs == null ) Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
+		this.app = tmp.getSecondInstance();
+
 		this.draw();
 		refreshButtonsPosition();
 	}
 
 	public void draw() {
 		if( drawingPane != null ) {
-			drawingPane.getChildren().clear(); // le clear supprime l'image actuel quand on en a 2
+			drawingPane.getChildren().clear();
 			for( Thread thread : threads ) {
 				thread.interrupt();
 				threads.clear();
@@ -73,7 +79,7 @@ public class Drawer {
 		gamePane.getChildren().add( drawingPane );
 
 		if( inputs == null ) {
-			Platform.runLater( () -> App.transferTo( Utils.GUI.MAIN_MENU ) );
+			Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
 			return;
 		}
 		buffer = new WritableImage( inputs.maxWidth, inputs.maxHeight );
@@ -93,23 +99,19 @@ public class Drawer {
 			if(generator.nom.equals("Mandelbrot")){
 				this.generator = generator.getMandelBrot();
 			}
-			System.out.println("Instance : " + this.instance + " fractale : " + this.generator.nom);
+			
 			Platform.runLater(this.generator);
 			
 		}
 		this.getInstance().drawingPane.getChildren().add(new ImageView (buffer) );
-		//Drawer.instance.drawingPane.getChildren().add( new ImageView( buffer ) );
-		
 	}
 
 	@FXML
 	private void onToImagePressed() {
-
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add( new FileChooser.ExtensionFilter( "PNG", "*.png" ) );
-
 		File file = fileChooser.showSaveDialog( App.mainInstance.primaryStage );
-
+		
 		if( file != null ) {
 			String fileName = file.getName();
 
@@ -133,7 +135,19 @@ public class Drawer {
 			thread.interrupt();
 			threads.clear();
 		}
-		App.transferTo( Utils.GUI.MAIN_MENU );
+		this.app.transferTo(Utils.GUI.MAIN_MENU);
+	}
+
+	@FXML
+	private void newDrawer(){
+		App z = new App();
+		Stage x = new Stage();
+		try {
+			z.start(x);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
 	}
 
 	@FXML
@@ -155,7 +169,6 @@ public class Drawer {
 		}else{
 			this.instance.MOVE_Y -= 0.2 / ZOOM;
 		}
-		System.out.println("Move up " + instance);
 		this.instance.draw();
 	} 
 
@@ -166,7 +179,6 @@ public class Drawer {
 		}else{
 			instance.MOVE_Y += 0.2 / ZOOM;
 		}
-		System.out.println("Move down " + instance);
 		this.draw();
 		
 	}
@@ -191,22 +203,13 @@ public class Drawer {
 		instance.draw();
 	}
 
-	@FXML
-	private void newDrawer(){
-		App nouveau = new App();
-		Stage x = new Stage();
-		
-		try {
-			nouveau.start(x);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	
-	}
 
 	public void refreshButtonsPosition() {
-		instance.buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
-		instance.buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
+		//instance.buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
+		//instance.buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
+		instance.buttonBar.setLayoutX( ( this.app.getSecondInstance().primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
+		instance.buttonBar.setLayoutY( this.app.getSecondInstance().primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
 	}
 
 	public class DrawerThread implements Runnable {
