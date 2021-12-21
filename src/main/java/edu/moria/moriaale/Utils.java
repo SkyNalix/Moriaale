@@ -1,15 +1,15 @@
 package edu.moria.moriaale;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.util.Pair;
+import javafx.scene.image.WritableImage;
+import javafx.stage.FileChooser;
 
+import javax.imageio.ImageIO;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 
 public class Utils {
 
@@ -31,13 +31,38 @@ public class Utils {
 		return Utils.class.getResource( address );
 	}
 
+	public static void saveWritableImage( WritableImage writableImage ) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add( new FileChooser.ExtensionFilter( "PNG", "*.png" ) );
+		saveWritableImage( writableImage, fileChooser.showSaveDialog( App.mainInstance.primaryStage ) );
+	}
+
+	public static void saveWritableImage( WritableImage writableImage, File file ) {
+
+		if( file != null ) {
+			String fileName = file.getName();
+
+			if( !fileName.toUpperCase().endsWith( ".PNG" ) ) {
+				file = new File( file.getAbsolutePath() + ".png" );
+			}
+			try {
+				ImageIO.write( SwingFXUtils.fromFXImage( writableImage, null ),
+							   "png", file );
+			} catch( IOException e ) {
+				e.printStackTrace();
+				System.out.println( "An error occurred while trying to save the image" );
+			}
+		}
+
+	}
+
 	public enum GUI {
 
 		MAIN_MENU( "Main menu", "/FXML/MainMenu.fxml" ),
 		DRAWER( "Drawer", "/FXML/Drawer.fxml" );
 
-		public String name;
-		public String FXMLPath;
+		public final String name;
+		public final String FXMLPath;
 
 		GUI( String label, String FXMLPath ) {
 			this.name = label;
