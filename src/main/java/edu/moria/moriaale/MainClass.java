@@ -14,6 +14,8 @@ public class MainClass {
 				  "Possible parameters:\n" +
 				  "   -h, --help\n" +
 				  "          Show this text.\n" +
+				  "   -draw\n" +
+				  "          Draw a fractal with default values.\n" +
 				  "   --type\n" +
 				  "          Use a specified fractal type.\n" +
 				  "          Default: julia\n" +
@@ -125,8 +127,8 @@ public class MainClass {
 						case "--path": {
 							savePath = args[readIndex + 1];
 							readIndex++;
-							while( readIndex+1 < args.length && !args[readIndex+1].startsWith( "-" ) ) {
-								savePath += " " + args[readIndex+1];
+							while( readIndex + 1 < args.length && !args[readIndex + 1].startsWith( "-" ) ) {
+								savePath += " " + args[readIndex + 1];
 								readIndex++;
 							}
 							break;
@@ -157,15 +159,18 @@ public class MainClass {
 					e.printStackTrace();
 				}
 			}
+
+			savePath = savePath.replaceAll( "\\\\", File.separator.replace( "\\", "\\\\" ) );
+			savePath = savePath.replaceAll( "/", File.separator.replace( "\\", "\\\\" ) );
+			if( !savePath.toLowerCase().endsWith( ".png" ) )
+				savePath += ".png";
 			File file = new File( savePath );
-			String[] dirs = savePath.split( File.separator );
-			for( int i = 0; i < dirs.length - 1; i++ ) {
-				if( !new File( dirs[i] ).mkdir() ) {
-					System.out.println( "Failed to create the directory " + dirs[i] );
-					System.exit( 1 );
-				}
+			if( file.mkdirs() )
+				Utils.saveWritableImage( writableImage, file );
+			else {
+				System.out.println( "An error occured while creating directories." );
+				System.exit( 1 );
 			}
-			Utils.saveWritableImage( writableImage, file );
 		}
 	}
 

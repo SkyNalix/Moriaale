@@ -7,10 +7,12 @@ Exécution du projet:
 Pour lancer la version du programme avec l'interface graphique il suffit de lancer normalement le programme,
 du coup avec ( à la racine du projet ) './gradlew run' ou pour le jar "java -jar build/libs/Moriaale.jar"
 
-Pour lancer la version en ligne de commande, il faut juste ajouter quelques arguments au lancement
+Pour lancer la version en ligne de commande, il faut juste ajouter quelques paramètres au lancement
 Utilisez le paramètre "-h" ou "--help" pour avoir la liste des paramètres et des exemples.
 Avec Gradle il faut mettre les arguments comme ceci: ./gradlew run --args="--help"
 Et avec le jar vous pouvez faire directement "java -jar build/libs/Moriaale.jar --help"
+Chaque option permet de modifier une valeur, si vous souhaitez ne rien modifier vous pouvez juste utiliser
+le parametre"--draw"
 
 Nous avons utilisé JavaFX au lieu de Swing car c'est celui avec lequel on est le plus habitué à utiliser.
 Nous avons également implémenté Gradle dans notre projet, qui nous a permis d'ajouter les librairies Javafx assez facilement
