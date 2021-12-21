@@ -9,9 +9,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 
+
 import java.util.List;
 
 public class MainMenu {
+  
+	public static App sortie ;
 
 	public static Fractal chosenFractal = Fractal.JULIA;
 	@FXML
@@ -30,11 +33,17 @@ public class MainMenu {
 	@FXML
 	private void drawFractalPressed() {
 		chosenFractal = Fractal.valueOf( choiceBox.getValue().toUpperCase() );
-		App.transferTo( Utils.GUI.DRAWER );
+		App.mainInstance.transferTo( Utils.GUI.DRAWER );
 	}
 
 	public void exitButtonPressed() {
-		Platform.exit();
+
+		if(sortie == null){
+			Platform.exit();
+		}else{
+			sortie.primaryStage.close();
+			sortie = null;
+		}
 	}
 
 }

@@ -3,6 +3,7 @@ package edu.moria.moriaale.controllers;
 import edu.moria.moriaale.App;
 import edu.moria.moriaale.InputMenu;
 import edu.moria.moriaale.Utils;
+import edu.moria.moriaale.Utils.GUI;
 import edu.moria.moriaale.fractals.Fractal;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -20,9 +21,12 @@ import java.util.ArrayList;
 
 public class Drawer {
 
+	public Drawer instance;
+ 
 	public static Drawer instance2;
 	public Drawer instance;
 	public ArrayList<Thread> threads = new ArrayList<>();
+	public App app;
 
 	public Pane gamePane;
 	public BorderPane drawingPane;
@@ -35,10 +39,9 @@ public class Drawer {
 	public Runnable generator;
 	private WritableImage buffer;
 
-	public Drawer getInstance() {
-		if( this.instance == null ) {
-			instance = instance2;
-
+	public Drawer getInstance(){
+		if( this.instance == null){
+			instance = instance2;		
 			return instance2;
 		}
 		return this.instance;
@@ -46,15 +49,20 @@ public class Drawer {
 
 	public void initialize() {
 		this.instance = this;
+		instance2 = this;  //le problème était là
 		inputs = InputMenu.showDialog();
-		if( inputs == null ) Platform.runLater( () -> App.transferTo( Utils.GUI.MAIN_MENU ) );
+
+		App tmp = new App();
+		if( inputs == null ) Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
+		this.app = tmp.getSecondInstance();
+
 		this.draw();
 		refreshButtonsPosition();
 	}
 
 	public void draw() {
 		if( drawingPane != null ) {
-			drawingPane.getChildren().clear(); // le clear supprime l'image actuel quand on en a 2
+			drawingPane.getChildren().clear();
 			for( Thread thread : threads ) {
 				thread.interrupt();
 				threads.clear();
@@ -65,7 +73,7 @@ public class Drawer {
 		gamePane.getChildren().add( drawingPane );
 
 		if( inputs == null ) {
-			Platform.runLater( () -> App.transferTo( Utils.GUI.MAIN_MENU ) );
+			Platform.runLater( () -> App.mainInstance.transferTo( Utils.GUI.MAIN_MENU ) );
 			return;
 		}
 		buffer = new WritableImage( inputs.maxWidth, inputs.maxHeight );
@@ -81,11 +89,11 @@ public class Drawer {
 			} catch( Exception e ) {
 				e.printStackTrace();
 			}
-			Platform.runLater( this.generator );
-
+			
+			Platform.runLater(this.generator);
+			
 		}
-		this.getInstance().drawingPane.getChildren().add( new ImageView( buffer ) );
-
+		this.getInstance().drawingPane.getChildren().add(new ImageView (buffer) );
 	}
 
 	@FXML
@@ -99,7 +107,19 @@ public class Drawer {
 			thread.interrupt();
 			threads.clear();
 		}
-		App.transferTo( Utils.GUI.MAIN_MENU );
+		this.app.transferTo(Utils.GUI.MAIN_MENU);
+	}
+
+	@FXML
+	private void newDrawer(){
+		App z = new App();
+		Stage x = new Stage();
+		try {
+			z.start(x);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
 	}
 
 	@FXML
@@ -121,7 +141,6 @@ public class Drawer {
 		} else {
 			this.instance.MOVE_Y -= 0.2 / ZOOM;
 		}
-		System.out.println( "Move up " + instance );
 		this.instance.draw();
 	}
 
@@ -132,7 +151,6 @@ public class Drawer {
 		} else {
 			instance.MOVE_Y += 0.2 / ZOOM;
 		}
-		System.out.println( "Move down " + instance );
 		this.draw();
 
 	}
@@ -171,8 +189,10 @@ public class Drawer {
 	}
 
 	public void refreshButtonsPosition() {
-		instance.buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
-		instance.buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
+		//instance.buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
+		//instance.buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
+		instance.buttonBar.setLayoutX( ( this.app.getSecondInstance().primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
+		instance.buttonBar.setLayoutY( this.app.getSecondInstance().primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
 	}
 
 }
