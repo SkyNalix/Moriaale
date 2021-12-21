@@ -33,8 +33,6 @@ public class MandelbrotRunnable implements Runnable{
 			inputs.zoom = 100;
 		}
 
-		int iter_max = 1200;
-
 		Complexe z = new Complexe( 0, 0 );
 		Complexe c = new Complexe( 0, 0 );
 		for( int y = minY; y < maxY; y++ ) {
@@ -49,12 +47,12 @@ public class MandelbrotRunnable implements Runnable{
 					z.real = z.real * z.real - z.imaginary * z.imaginary + c.real;
 					z.imaginary = 2 * z.imaginary * tmp + c.imaginary;
 					i = i + 1;
-				} while( z.real * z.real + z.imaginary * z.imaginary < 4 && i < iter_max );
+				} while( z.real * z.real + z.imaginary * z.imaginary < 4 && i < inputs.maxIterations );
 
-				if( i == iter_max ) { //dessine le pixel de la couleur de la fractale
-					pw.setArgb( x, y, Color.HSBtoRGB( (float) i / iter_max, 0.7f, 0.7f ) );
+				if( i == inputs.maxIterations ) { //dessine le pixel de la couleur de la fractale
+					pw.setArgb( x, y, Color.HSBtoRGB( (float) i / inputs.maxIterations, 0.7f, 0.7f ) );
 				} else { //dessine le pixel de la couleur de remplissage
-					pw.setArgb( x, y, Color.HSBtoRGB( (float) i / iter_max, 0.3f, 0.3f ) );
+					pw.setArgb( x, y, Color.HSBtoRGB( (float) i / inputs.maxIterations, 0.3f, 0.3f ) );
 				}
 			}
 		}

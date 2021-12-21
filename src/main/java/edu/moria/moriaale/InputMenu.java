@@ -26,6 +26,8 @@ public class InputMenu {
 		entries.add( new TextField( "500"  ) );
 		entries.add( new Label( "Zoom multiplier" ) );
 		entries.add( new TextField( "1.0" ) );
+		entries.add( new Label( "Max iterations" ) );
+		entries.add( new TextField( "1200" ) );
 
 		VBox vbox = new VBox();
 		for( Node entry : entries )
@@ -40,7 +42,8 @@ public class InputMenu {
 							  Float.parseFloat( ( (TextField) entries.get( 3 ) ).getText() ),
 							  Integer.parseInt( ( (TextField) entries.get( 5 ) ).getText() ),
 							  Integer.parseInt( ( (TextField) entries.get( 7 ) ).getText() ),
-							  Double.parseDouble( ( (TextField) entries.get( 9 ) ).getText() )
+							  Double.parseDouble( ( (TextField) entries.get( 9 ) ).getText() ),
+							  Integer.parseInt( ( (TextField) entries.get( 11 ) ).getText() )
 					);
 				} catch( Exception e ) {
 					return null;
@@ -59,13 +62,15 @@ public class InputMenu {
 		public int maxWidth;
 		public int maxHeight;
 		public double zoom;
+		public int maxIterations;
 
-		public Inputs( double CReal, double CImaginary, int maxWidth, int maxHeight, double zoom ) {
+		public Inputs( double CReal, double CImaginary, int maxWidth, int maxHeight, double zoom, int maxIterations) {
 			this.CReal = CReal;
 			this.CImaginary = CImaginary;
 			this.maxWidth = maxWidth;
 			this.maxHeight = maxHeight;
 			this.zoom = zoom;
+			this.maxIterations = maxIterations;
 		}
 
 	}

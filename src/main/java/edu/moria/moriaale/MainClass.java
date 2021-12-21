@@ -66,7 +66,7 @@ public class MainClass {
 			App.main( args );
 		else {
 			Fractal fractalType = Fractal.JULIA;
-			InputMenu.Inputs inputs = new InputMenu.Inputs( 0.285, 0.01, 500, 500, 1.0 );
+			InputMenu.Inputs inputs = new InputMenu.Inputs( 0.285, 0.01, 500, 500, 1.0, 1200 );
 			double MOVE_Y = 0;
 			double MOVE_X = 0;
 			String savePath = "result.png";
