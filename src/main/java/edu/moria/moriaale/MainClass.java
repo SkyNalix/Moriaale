@@ -168,15 +168,17 @@ public class MainClass {
 			}
 			String separator = File.separator.replace( "\\", "\\\\" );
 			savePath = savePath.replaceAll( "\\\\", separator );
-			savePath = savePath.replaceAll( "/", separator);
-			if( savePath.endsWith( separator ))
+			savePath = savePath.replaceAll( "/", separator );
+			if( savePath.endsWith( separator ) )
 				savePath += "result.png";
 			else if( !savePath.toLowerCase().endsWith( ".png" ) )
 				savePath += ".png";
 			File file = new File( savePath );
-			if( file.mkdirs() )
+			if( file.exists() )
+				file.delete();
+			if( file.mkdirs() ) {
 				Utils.saveWritableImage( writableImage, file );
-			else {
+			} else {
 				System.out.println( "An error occured while creating directories." );
 				System.exit( 1 );
 			}
