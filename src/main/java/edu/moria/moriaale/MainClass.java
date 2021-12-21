@@ -159,10 +159,12 @@ public class MainClass {
 					e.printStackTrace();
 				}
 			}
-
-			savePath = savePath.replaceAll( "\\\\", File.separator.replace( "\\", "\\\\" ) );
-			savePath = savePath.replaceAll( "/", File.separator.replace( "\\", "\\\\" ) );
-			if( !savePath.toLowerCase().endsWith( ".png" ) )
+			String separator = File.separator.replace( "\\", "\\\\" );
+			savePath = savePath.replaceAll( "\\\\", separator );
+			savePath = savePath.replaceAll( "/", separator);
+			if( savePath.endsWith( separator ))
+				savePath += "result.png";
+			else if( !savePath.toLowerCase().endsWith( ".png" ) )
 				savePath += ".png";
 			File file = new File( savePath );
 			if( file.mkdirs() )

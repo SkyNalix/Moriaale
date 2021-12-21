@@ -3,7 +3,6 @@ package edu.moria.moriaale.controllers;
 import edu.moria.moriaale.App;
 import edu.moria.moriaale.InputMenu;
 import edu.moria.moriaale.Utils;
-import edu.moria.moriaale.Utils.GUI;
 import edu.moria.moriaale.fractals.Fractal;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -21,11 +20,9 @@ import java.util.ArrayList;
 
 public class Drawer {
 
-	public Drawer instance;
- 
 	public static Drawer instance2;
+	public final ArrayList<Thread> threads = new ArrayList<>();
 	public Drawer instance;
-	public ArrayList<Thread> threads = new ArrayList<>();
 	public App app;
 
 	public Pane gamePane;
@@ -39,9 +36,9 @@ public class Drawer {
 	public Runnable generator;
 	private WritableImage buffer;
 
-	public Drawer getInstance(){
-		if( this.instance == null){
-			instance = instance2;		
+	public Drawer getInstance() {
+		if( this.instance == null ) {
+			instance = instance2;
 			return instance2;
 		}
 		return this.instance;
@@ -49,7 +46,7 @@ public class Drawer {
 
 	public void initialize() {
 		this.instance = this;
-		instance2 = this;  //le problème était là
+		instance2 = this;
 		inputs = InputMenu.showDialog();
 
 		App tmp = new App();
@@ -83,17 +80,15 @@ public class Drawer {
 		int blockSize = ( inputs.maxHeight / nbBlock );
 		for( int y = 0; y < nbBlock; y++ ) {
 			int startY = y * blockSize;
-
 			try {
-				this.generator = (Runnable) MainMenu.chosenFractal.constructors.newInstance( pw, startY, startY + blockSize,inputs, MOVE_X, MOVE_Y );
+				this.generator = (Runnable) MainMenu.chosenFractal.constructors.newInstance(
+						  pw, startY, startY + blockSize, inputs, MOVE_X, MOVE_Y );
+				Platform.runLater( this.generator );
 			} catch( Exception e ) {
 				e.printStackTrace();
 			}
-			
-			Platform.runLater(this.generator);
-			
 		}
-		this.getInstance().drawingPane.getChildren().add(new ImageView (buffer) );
+		this.getInstance().drawingPane.getChildren().add( new ImageView( buffer ) );
 	}
 
 	@FXML
@@ -107,19 +102,19 @@ public class Drawer {
 			thread.interrupt();
 			threads.clear();
 		}
-		this.app.transferTo(Utils.GUI.MAIN_MENU);
+		this.app.transferTo( Utils.GUI.MAIN_MENU );
 	}
 
 	@FXML
-	private void newDrawer(){
-		App z = new App();
+	private void newDrawer() {
+		App nouveau = new App();
 		Stage x = new Stage();
+
 		try {
-			z.start(x);
-		} catch (IOException e) {
+			nouveau.start( x );
+		} catch( IOException e ) {
 			e.printStackTrace();
 		}
-	
 	}
 
 	@FXML
@@ -129,7 +124,7 @@ public class Drawer {
 	}
 
 	@FXML
-	private void onUnzoomPressed() {
+	private void onUnZoomPressed() {
 		ZOOM *= 0.5;
 		instance.draw();
 	}
@@ -175,23 +170,9 @@ public class Drawer {
 		instance.draw();
 	}
 
-	@FXML
-	private void newDrawer() {
-		App nouveau = new App();
-		Stage x = new Stage();
-
-		try {
-			nouveau.start( x );
-		} catch( IOException e ) {
-			e.printStackTrace();
-		}
-
-	}
-
 	public void refreshButtonsPosition() {
-		//instance.buttonBar.setLayoutX( ( App.mainInstance.primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
-		//instance.buttonBar.setLayoutY( App.mainInstance.primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
-		instance.buttonBar.setLayoutX( ( this.app.getSecondInstance().primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 205 );
+		instance.buttonBar.toFront();
+		instance.buttonBar.setLayoutX( ( this.app.getSecondInstance().primaryStage.getWidth() - instance.buttonBar.getWidth() ) / 2 - 255 );
 		instance.buttonBar.setLayoutY( this.app.getSecondInstance().primaryStage.getHeight() - ( 2 * instance.buttonBar.getHeight() ) - 110 );
 	}
 
