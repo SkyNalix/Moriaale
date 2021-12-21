@@ -48,6 +48,10 @@ public class MainClass {
 				  "          Move the fractal image on the vertical line.\n" +
 				  "          Default: 0\n" +
 				  "          Exemple : --moveY 0.5 \n" +
+				  "   --iterations\n" +
+				  "          Change the amount of iterations used for each pixel.\n" +
+				  "          Default: 1200\n" +
+				  "          Exemple : --iterations 200 \n" +
 				  "   --path\n" +
 				  "          Use the specified path where save the result png.\n" +
 				  "          Default: result.png\n" +
@@ -66,7 +70,7 @@ public class MainClass {
 			App.main( args );
 		else {
 			Fractal fractalType = Fractal.JULIA;
-			InputMenu.Inputs inputs = new InputMenu.Inputs( 0.285, 0.01, 500, 500, 1.0 );
+			InputMenu.Inputs inputs = new InputMenu.Inputs( 0.285, 0.01, 500, 500, 1.0, 1200 );
 			double MOVE_Y = 0;
 			double MOVE_X = 0;
 			String savePath = "result.png";
@@ -123,6 +127,9 @@ public class MainClass {
 						case "--moveY": {
 							MOVE_Y = Double.parseDouble( args[readIndex + 1] );
 						}
+						case "--iterations": {
+							inputs.maxIterations = Integer.parseInt( args[readIndex + 1] );
+						}
 						break;
 						case "--path": {
 							savePath = args[readIndex + 1];
@@ -161,15 +168,17 @@ public class MainClass {
 			}
 			String separator = File.separator.replace( "\\", "\\\\" );
 			savePath = savePath.replaceAll( "\\\\", separator );
-			savePath = savePath.replaceAll( "/", separator);
-			if( savePath.endsWith( separator ))
+			savePath = savePath.replaceAll( "/", separator );
+			if( savePath.endsWith( separator ) )
 				savePath += "result.png";
 			else if( !savePath.toLowerCase().endsWith( ".png" ) )
 				savePath += ".png";
 			File file = new File( savePath );
-			if( file.mkdirs() )
+			if( file.exists() )
+				file.delete();
+			if( file.mkdirs() ) {
 				Utils.saveWritableImage( writableImage, file );
-			else {
+			} else {
 				System.out.println( "An error occured while creating directories." );
 				System.exit( 1 );
 			}

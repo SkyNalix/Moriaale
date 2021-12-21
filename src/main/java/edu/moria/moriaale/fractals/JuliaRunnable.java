@@ -28,15 +28,14 @@ public class JuliaRunnable implements Runnable {
 	public void run() {
 		for( int y = minY; y < maxY; y++ ) {
 			for( int x = 0; x < inputs.maxWidth; x++ ) {
-				int MAX_ITERATIONS = 1200;
 				Complexe c = new Complexe( inputs.CReal, inputs.CImaginary );
 				Complexe z = new Complexe(
 						  1.5 * ( x - inputs.maxWidth / 2.0 ) / ( 0.5 * inputs.zoom * inputs.maxWidth ) + MOVE_X,
 						  ( y - inputs.maxHeight / 2.0 ) / ( 0.5 * inputs.zoom * inputs.maxHeight ) + MOVE_Y
 				);
-				float i = Utils.divergenceIndex( MAX_ITERATIONS, z, c );
+				float i = Utils.divergenceIndex( inputs.maxIterations, z, c );
 
-				int color = Color.HSBtoRGB( i / MAX_ITERATIONS, 0.7f, 0.7f );
+				int color = Color.HSBtoRGB( i / inputs.maxIterations, 0.7f, 0.7f );
 
 				pw.setArgb( x, y, color );
 			}

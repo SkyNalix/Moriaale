@@ -20,16 +20,15 @@ import java.util.ArrayList;
 
 public class Drawer {
 
+	public Drawer instance;
 	public static Drawer instance2;
 	public final ArrayList<Thread> threads = new ArrayList<>();
-	public Drawer instance;
 	public App app;
 
 	public Pane gamePane;
 	public BorderPane drawingPane;
 	public ButtonBar buttonBar;
 
-	public double ZOOM = 1.0;
 	public double MOVE_X = 0.1;
 	public double MOVE_Y = 0.1;
 	public InputMenu.Inputs inputs;
@@ -89,6 +88,7 @@ public class Drawer {
 			}
 		}
 		this.getInstance().drawingPane.getChildren().add( new ImageView( buffer ) );
+		buttonBar.toFront();
 	}
 
 	@FXML
@@ -119,22 +119,22 @@ public class Drawer {
 
 	@FXML
 	private void onZoomPressed() {
-		ZOOM *= 1.5;
+		inputs.zoom *= 1.5;
 		this.instance.draw();
 	}
 
 	@FXML
 	private void onUnZoomPressed() {
-		ZOOM *= 0.5;
+		inputs.zoom *= 0.5;
 		instance.draw();
 	}
 
 	@FXML
 	private void onMoveUpPressed() {
 		if( MainMenu.chosenFractal == Fractal.MANDELBROT ) {
-			this.instance.MOVE_Y -= 50 / ZOOM;
+			this.instance.MOVE_Y -= 50 / inputs.zoom;
 		} else {
-			this.instance.MOVE_Y -= 0.2 / ZOOM;
+			this.instance.MOVE_Y -= 0.2 / inputs.zoom;
 		}
 		this.instance.draw();
 	}
@@ -142,9 +142,9 @@ public class Drawer {
 	@FXML
 	private void onMoveDownPressed() {
 		if( MainMenu.chosenFractal == Fractal.MANDELBROT ) {
-			instance.MOVE_Y += 50 / ZOOM;
+			instance.MOVE_Y += 50 / inputs.zoom;
 		} else {
-			instance.MOVE_Y += 0.2 / ZOOM;
+			instance.MOVE_Y += 0.2 / inputs.zoom;
 		}
 		this.draw();
 
@@ -153,9 +153,9 @@ public class Drawer {
 	@FXML
 	private void onMoveLeftPressed() {
 		if( MainMenu.chosenFractal == Fractal.MANDELBROT ) {
-			MOVE_X -= 50 / ZOOM;
+			MOVE_X -= 50 / inputs.zoom;
 		} else {
-			MOVE_X -= 0.2 / ZOOM;
+			MOVE_X -= 0.2 / inputs.zoom;
 		}
 		instance.draw();
 	}
@@ -163,9 +163,9 @@ public class Drawer {
 	@FXML
 	private void onMoveRightPressed() {
 		if( MainMenu.chosenFractal == Fractal.MANDELBROT ) {
-			MOVE_X += 50 / ZOOM;
+			MOVE_X += 50 / inputs.zoom;
 		} else {
-			MOVE_X += 0.2 / ZOOM;
+			MOVE_X += 0.2 / inputs.zoom;
 		}
 		instance.draw();
 	}
