@@ -10,62 +10,64 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.moria.moriaale.controllers.Drawer">
    <children>
-      <Pane fx:id="gamePane" prefHeight="400.0" prefWidth="800.0" />
-      <ButtonBar fx:id="buttonBar" layoutX="186.0" layoutY="300.0" prefHeight="71.0" prefWidth="412.0">
-        <buttons>
-            <HBox prefHeight="121.0" prefWidth="425.0">
-               <children>
-                  <BorderPane prefHeight="83.0" prefWidth="80.0">
-                     <top>
-                        <Button mnemonicParsing="false" onAction="#onMoveUpPressed" text="↑" BorderPane.alignment="CENTER" />
-                     </top>
-                     <bottom>
-                        <Button mnemonicParsing="false" onAction="#onMoveDownPressed" text="↓" BorderPane.alignment="CENTER" />
-                     </bottom>
-                     <left>
-                        <Button mnemonicParsing="false" onAction="#onMoveLeftPressed" text="←" BorderPane.alignment="CENTER" />
-                     </left>
-                     <right>
-                        <Button mnemonicParsing="false" onAction="#onMoveRightPressed" text="→" BorderPane.alignment="CENTER" />
-                     </right>
-                  </BorderPane>
-                  <Button fx:id="zoomButton" maxHeight="43.0" maxWidth="46.0" minHeight="43.0" minWidth="46.0" mnemonicParsing="false" onAction="#onZoomPressed" prefHeight="43.0" prefWidth="46.0" text="+">
-                     <font>
-                        <Font size="21.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets left="10.0" top="20.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="unZoomButton" maxHeight="43.0" maxWidth="45.0" minHeight="42.0" minWidth="45.0" mnemonicParsing="false" onAction="#onUnzoomPressed" prefHeight="43.0" prefWidth="45.0" text="-">
-                     <font>
-                        <Font size="21.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets top="20.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#onToImagePressed" prefHeight="43.0" prefWidth="102.0" text="To Image">
-                     <HBox.margin>
-                        <Insets left="10.0" top="20.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="exitButton" mnemonicParsing="false" onAction="#onExitPressed" prefHeight="41.0" prefWidth="73.0" text="Exit">
-                     <HBox.margin>
-                        <Insets left="20.0" top="20.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="newDrawerButton" prefHeight="43.0" prefWidth="102.0" mnemonicParsing="false" onAction="#newDrawer" text="new image">
-                     <HBox.margin>
-                        <Insets left="10.0" top="20.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
-        </buttons>
-         <padding>
-            <Insets bottom="10.0" />
-         </padding>
-      </ButtonBar>
+      <Pane fx:id="gamePane" prefHeight="400.0" prefWidth="800.0">
+         <children>
+            <ButtonBar fx:id="buttonBar" layoutX="143.0" layoutY="301.0">
+              <buttons>
+                  <HBox>
+                     <children>
+                        <BorderPane prefHeight="83.0" prefWidth="80.0">
+                           <top>
+                              <Button mnemonicParsing="false" onAction="#onMoveUpPressed" text="↑" BorderPane.alignment="CENTER" />
+                           </top>
+                           <bottom>
+                              <Button mnemonicParsing="false" onAction="#onMoveDownPressed" text="↓" BorderPane.alignment="CENTER" />
+                           </bottom>
+                           <left>
+                              <Button mnemonicParsing="false" onAction="#onMoveLeftPressed" text="←" BorderPane.alignment="CENTER" />
+                           </left>
+                           <right>
+                              <Button mnemonicParsing="false" onAction="#onMoveRightPressed" text="→" BorderPane.alignment="CENTER" />
+                           </right>
+                        </BorderPane>
+                        <Button maxHeight="43.0" maxWidth="46.0" minHeight="43.0" minWidth="46.0" mnemonicParsing="false" onAction="#onZoomPressed" prefHeight="43.0" prefWidth="46.0" text="+">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button maxHeight="43.0" maxWidth="45.0" minHeight="42.0" minWidth="45.0" mnemonicParsing="false" onAction="#onUnZoomPressed" prefHeight="43.0" prefWidth="45.0" text="-">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#onToImagePressed" prefHeight="43.0" prefWidth="102.0" text="To Image">
+                           <HBox.margin>
+                              <Insets left="10.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#newDrawer" prefHeight="43.0" prefWidth="102.0" text="New window">
+                           <HBox.margin>
+                              <Insets left="10.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#onExitPressed" prefHeight="41.0" prefWidth="73.0" text="Exit">
+                           <HBox.margin>
+                              <Insets left="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+              </buttons>
+               <padding>
+                  <Insets bottom="10.0" />
+               </padding>
+            </ButtonBar>
+         </children></Pane>
    </children>
 </Pane>

@@ -115,6 +115,8 @@ public class Drawer {
 			thread.interrupt();
 			threads.clear();
 		}
+		this.app.change = false;
+		this.app.actuel = null;
 		this.app.transferTo( Utils.GUI.MAIN_MENU );
 	}
 
