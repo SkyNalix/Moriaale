@@ -4,7 +4,7 @@ import edu.moria.moriaale.App;
 import edu.moria.moriaale.Complexe;
 import edu.moria.moriaale.InputMenu;
 import edu.moria.moriaale.Utils;
-import edu.moria.moriaale.Utils.GUI;
+import edu.moria.moriaale.InputMenu.InputsCouleur;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -15,7 +15,7 @@ import javafx.scene.image.WritableImage;
 
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -44,6 +44,9 @@ public class Drawer {
 	private WritableImage buffer;
 	public DrawerThread generator;
 
+	public InputsCouleur couleurFond;
+	public InputsCouleur couleurFractal;
+
 	
 	public Drawer getInstance(){
 		if( this.instance == null){
@@ -54,6 +57,11 @@ public class Drawer {
 	}
 
 	public void initialize() {
+		if(MainMenu.liste != null){
+			this.couleurFond = MainMenu.liste.get(0);
+			this.couleurFractal = MainMenu.liste.get(1);
+		}
+		
 		this.instance = this;
 		instance2 = this;  //le problème était là
 		inputs = InputMenu.showDialog();
@@ -91,12 +99,13 @@ public class Drawer {
 			int startY = y * blockSize;
 			
 			if(this.generator == null){
-			this.generator = new DrawerThread( pw, startY, startY + blockSize,MainMenu.choix );
+				this.generator = new DrawerThread( pw, startY, startY + blockSize,MainMenu.choix,this.couleurFond, this.couleurFractal);
 			}else{
-				this.generator = new DrawerThread(pw, startY, startY + blockSize,this.generator.nom);
+				this.generator = new DrawerThread(pw, startY, startY + blockSize,this.generator.nom,this.couleurFond, this.couleurFractal);
 			}
 
 			if(generator.nom.equals("Mandelbrot")){
+				this.generator = new DrawerThread(generator.pw, generator.minY, generator.maxY, generator.nom,this.couleurFond, this.couleurFractal);
 				this.generator = generator.getMandelBrot();
 			}
 			
@@ -218,12 +227,23 @@ public class Drawer {
 		private final int minY;
 		private final int maxY;
 		private final String nom;
+		InputsCouleur fond;
+		InputsCouleur fractal;
 
 		public DrawerThread( PixelWriter pw, int minY, int maxY,String nom ) {
 			this.pw = pw;
 			this.minY = minY;
 			this.maxY = maxY;
 			this.nom = nom;
+		}
+
+		public DrawerThread( PixelWriter pw, int minY, int maxY,String nom,InputsCouleur fond,InputsCouleur fractal ) {
+			this.pw = pw;
+			this.minY = minY;
+			this.maxY = maxY;
+			this.nom = nom;
+			this.fractal = fractal;
+			this.fond = fond;
 		}
 
 		@Override
@@ -237,16 +257,35 @@ public class Drawer {
 							  ( y - inputs.maxHeight / 2.0 ) / ( 0.5 * ZOOM * inputs.maxHeight ) + MOVE_Y
 					);
 					float i = Utils.divergenceIndex( MAX_ITERATIONS, z, c );
+							//changez cette méthode pour reproduire mandelbrot 
 
-					int color = Color.HSBtoRGB( i / MAX_ITERATIONS, 0.7f, 0.7f );
-
-					pw.setArgb( x, y, color );
+					//Color couleur = new Color(i/MAX_ITERATIONS,0.7f,0.7f,0.5f) ;  
+					Color couleur = Color.hsb(i, 0.7, 0.7);
+					if(this.fond != null){
+						if(couleur.getRed() > couleur.getGreen() || couleur.getBlue() > couleur.getGreen()){
+							//fond d'ecran
+							float r = (float) this.fond.r/255.f;
+							float v = (float) this.fond.v/255.f;
+							float b = (float) this.fond.b/255.f;
+							Color couleur2 = new Color(r,v,b,1.0) ;  
+							pw.setColor(x, y, couleur2);
+						}else{
+							float r = (float) this.fractal.r/255.f;
+							float v = (float) this.fractal.v/255.f;
+							float b = (float) this.fractal.b/255.f;
+							Color couleur2 = new Color(r,v,b,1.0) ;  
+							pw.setColor(x, y, couleur2);
+						}
+					}else{ //version de base
+						int color = java.awt.Color.HSBtoRGB((float) i / MAX_ITERATIONS, 0.7f, 0.7f );
+						pw.setArgb( x, y,color );
+					}
 				}
 			}
 		}
 
 		public DrawerThread  getMandelBrot(){
-			DrawerThread mandel = new DrawerThread(this.pw, this.minY, this.maxY,this.nom){
+			DrawerThread mandel = new DrawerThread(this.pw, this.minY, this.maxY,this.nom,this.fond,this.fractal){
 				@Override
 				public void run(){
 					
@@ -276,9 +315,27 @@ public class Drawer {
 							}while(z.real*z.real + z.imaginary*z.imaginary < 4 && i <iter_max);
 							
 							if(i==iter_max){ //dessine le pixel de la couleur de la fractale
-								pw.setArgb( x, y,  Color.HSBtoRGB((float)i/iter_max, 0.7f, 0.7f) );
+								if(this.fractal != null){
+									float r = (float) this.fractal.r/255.f;
+									float v = (float) this.fractal.v/255.f;
+									float b = (float) this.fractal.b/255.f;
+									Color couleur = new Color(r,v,b,1.0) ;  
+									pw.setColor(x, y, couleur);
+								}else{
+									pw.setColor(x, y, new Color(0.5,0.3,0.3,1));
+									//pw.setArgb( x, y, java.awt.Color.HSBtoRGB((float)i/iter_max, 0.3f, 0.3f) );
+								}
 							}else{ //dessine le pixel de la couleur de remplissage
-								pw.setArgb( x, y,  Color.HSBtoRGB((float)i/iter_max, 0.3f, 0.3f) );
+								if(this.fond != null){
+									float r = (float) this.fond.r/255.f;
+									float v = (float) this.fond.v/255.f;
+									float b = (float) this.fond.b/255.f;
+									Color couleur = new Color(r,v,b,1.0) ;  
+									pw.setColor(x, y, couleur);
+								}else{
+									pw.setArgb( x, y, java.awt.Color.HSBtoRGB((float)i/iter_max, 0.3f, 0.3f) );
+								}
+								//pw.setArgb( x, y,  Color.HSBtoRGB((float)i/iter_max, 0.3f, 0.3f) );
 							}
 						}
 					}
