@@ -3,10 +3,9 @@ package edu.moria.moriaale.fractals;
 import edu.moria.moriaale.Complexe;
 import edu.moria.moriaale.InputMenu;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.paint.Color;
 
-import java.awt.*;
-
-public class MandelbrotRunnable implements Runnable{
+public class MandelbrotRunnable implements Runnable {
 
 	private final PixelWriter pw;
 	private final int minY;
@@ -14,14 +13,18 @@ public class MandelbrotRunnable implements Runnable{
 	private final InputMenu.Inputs inputs;
 	private final double MOVE_X;
 	private final double MOVE_Y;
+	private final InputMenu.InputsCouleur couleurFond;
+	private final InputMenu.InputsCouleur couleurFractal;
 
-	public MandelbrotRunnable( PixelWriter pw, int minY, int maxY, InputMenu.Inputs inputs, double MOVE_X, double MOVE_Y ) {
+	public MandelbrotRunnable( PixelWriter pw, int minY, int maxY, InputMenu.Inputs inputs, double MOVE_X, double MOVE_Y, InputMenu.InputsCouleur couleurFond, InputMenu.InputsCouleur couleurFractal ) {
 		this.pw = pw;
 		this.minY = minY;
 		this.maxY = maxY;
 		this.inputs = inputs;
 		this.MOVE_X = MOVE_X;
 		this.MOVE_Y = MOVE_Y;
+		this.couleurFond = couleurFond;
+		this.couleurFractal = couleurFractal;
 	}
 
 	public void run() {
@@ -50,12 +53,29 @@ public class MandelbrotRunnable implements Runnable{
 				} while( z.real * z.real + z.imaginary * z.imaginary < 4 && i < inputs.maxIterations );
 
 				if( i == inputs.maxIterations ) { //dessine le pixel de la couleur de la fractale
-					pw.setArgb( x, y, Color.HSBtoRGB( (float) i / inputs.maxIterations, 0.7f, 0.7f ) );
+					if( couleurFractal != null ) {
+						setColor( y, x, couleurFractal );
+					} else {
+						pw.setColor( x, y, new Color( 0.5, 0.3, 0.3, 1 ) );
+						//pw.setArgb( x, y, java.awt.Color.HSBtoRGB((float)i/iter_max, 0.3f, 0.3f) );
+					}
 				} else { //dessine le pixel de la couleur de remplissage
-					pw.setArgb( x, y, Color.HSBtoRGB( (float) i / inputs.maxIterations, 0.3f, 0.3f ) );
+					if( couleurFond != null ) {
+						setColor( y, x, couleurFond );
+					} else {
+						pw.setArgb( x, y, java.awt.Color.HSBtoRGB( (float) i / inputs.maxIterations, 0.3f, 0.3f ) );
+					}
 				}
 			}
 		}
+	}
+
+	private void setColor( int y, int x, InputMenu.InputsCouleur couleurFractal ) {
+		float r = (float) couleurFractal.r / 255.f;
+		float v = (float) couleurFractal.v / 255.f;
+		float b = (float) couleurFractal.b / 255.f;
+		Color couleur = new Color( r, v, b, 1.0 );
+		pw.setColor( x, y, couleur );
 	}
 
 }

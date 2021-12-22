@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="800.0" prefHeight="400.0" prefWidth="800.0" style="-fx-background-color: dddddd;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.moria.moriaale.controllers.MainMenu">
    <center>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
@@ -33,10 +34,30 @@
                   <InnerShadow />
                </effect>
             </Button>
+
+
+            <Button fx:id="ChoixCouleur" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#choixCouleurPressed" prefHeight="30.0" prefWidth="169.0" text="Choix des Couleur">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </Button>
+
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#setDefaut" prefHeight="30.0" prefWidth="150.0" text="couleur par defaut">
+               <VBox.margin>
+               <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
             <Button alignment="CENTER" mnemonicParsing="false" onAction="#exitButtonPressed" prefHeight="30.0" prefWidth="150.0" text="Exit">
                <VBox.margin>
-                  <Insets top="30.0" />
-               </VBox.margin></Button>
+               <Insets top="30.0" />
+               </VBox.margin>
+            </Button>
          </children>
          <BorderPane.margin>
             <Insets />

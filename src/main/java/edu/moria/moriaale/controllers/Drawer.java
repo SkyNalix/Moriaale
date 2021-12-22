@@ -3,6 +3,7 @@ package edu.moria.moriaale.controllers;
 import edu.moria.moriaale.App;
 import edu.moria.moriaale.InputMenu;
 import edu.moria.moriaale.Utils;
+import edu.moria.moriaale.InputMenu.InputsCouleur;
 import edu.moria.moriaale.fractals.Fractal;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -12,6 +13,8 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -35,6 +38,10 @@ public class Drawer {
 	public Runnable generator;
 	private WritableImage buffer;
 
+	public InputsCouleur couleurFond;
+	public InputsCouleur couleurFractal;
+
+	
 	public Drawer getInstance() {
 		if( this.instance == null ) {
 			instance = instance2;
@@ -44,6 +51,11 @@ public class Drawer {
 	}
 
 	public void initialize() {
+		if(MainMenu.liste != null){
+			this.couleurFond = MainMenu.liste.get(0);
+			this.couleurFractal = MainMenu.liste.get(1);
+		}
+		
 		this.instance = this;
 		instance2 = this;
 		inputs = InputMenu.showDialog();
@@ -79,9 +91,10 @@ public class Drawer {
 		int blockSize = ( inputs.maxHeight / nbBlock );
 		for( int y = 0; y < nbBlock; y++ ) {
 			int startY = y * blockSize;
+
 			try {
 				this.generator = (Runnable) MainMenu.chosenFractal.constructors.newInstance(
-						  pw, startY, startY + blockSize, inputs, MOVE_X, MOVE_Y );
+						  pw, startY, startY + blockSize, inputs, MOVE_X, MOVE_Y, this.couleurFond, this.couleurFractal );
 				Platform.runLater( this.generator );
 			} catch( Exception e ) {
 				e.printStackTrace();
