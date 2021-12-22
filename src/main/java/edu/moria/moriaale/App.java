@@ -18,7 +18,7 @@ public class App extends Application {
 	public static App mainInstance;
 	public App secondInstance;
 
-	public  Drawer actuel;
+	public Drawer actuel;
 	public boolean change = false;
 
 	public Parent layout;
@@ -29,8 +29,8 @@ public class App extends Application {
 		launch();
 	}
 
-	public App getSecondInstance(){
-		if(this.secondInstance == null){
+	public App getSecondInstance() {
+		if( this.secondInstance == null ) {
 			secondInstance = mainInstance;
 			return secondInstance;
 		}
@@ -38,28 +38,26 @@ public class App extends Application {
 	}
 
 
-
-	public  void transferTo( Utils.GUI destination ) {
+	public void transferTo( Utils.GUI destination ) {
 		Stage primaryStage = this.secondInstance.primaryStage;
 		MainMenu.sortie = this.secondInstance;
 		try {
 			mainInstance.layout = Utils.getParentFromResource( destination );
-			
+
 		} catch( IOException e ) {
 			e.printStackTrace();
 		}
 		primaryStage.getScene().setRoot( mainInstance.layout );
-
 		primaryStage.setTitle( "Moriaale - " + destination.name );
+
 		ChangeListener<Number> stageSizeListener = ( observable, oldValue, newValue ) -> {
-			if(this.change == false){
+			if( !this.change ) {
 				this.change = true;
 				this.actuel = Drawer.instance2;
 			}
-			ButtonBar buttonBar = this.actuel.buttonBar; 
-
+			ButtonBar buttonBar = this.actuel.buttonBar;
 			buttonBar.setLayoutX( ( primaryStage.getWidth() - buttonBar.getWidth() ) / 2 );
-			buttonBar.setLayoutY( primaryStage.getHeight() - ( 1.3* buttonBar.getHeight() ) );
+			buttonBar.setLayoutY( primaryStage.getHeight() - ( 1.3 * buttonBar.getHeight() ) );
 		};
 		primaryStage.widthProperty().addListener( stageSizeListener );
 		primaryStage.heightProperty().addListener( stageSizeListener );
@@ -86,11 +84,6 @@ public class App extends Application {
 		} catch( Exception ignored ) {
 		}
 		primaryStage.show();
-	}
-
-	@Override
-	public void stop() throws Exception {
-		super.stop();
 	}
 
 }
