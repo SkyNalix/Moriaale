@@ -22,3 +22,6 @@ On a implémenté les threads dans notre projet le calcul les fractales rapideme
 Nous avons séparé l'image en 4 parties, qui a chacun un thread séparé qui est responsable de calculer
 les divergences de tous les pixels dans cette partie.n un thread séparé qui est résponsable de calculer
 les divergences de tous les pixels dans cette partie.
+
+Nous avons utilisé ce lien pour implementer la fractale de Mandelbrot
+https://openclassrooms.com/forum/sujet/fractale-mandelbrot-java-46496
