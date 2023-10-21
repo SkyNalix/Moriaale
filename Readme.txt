@@ -1,5 +1,7 @@
 Projet de CPOO 2021-2022 de TAZOUEV Arbi et GUINET Virgile
 
+Le but du projet est de faire interface graphique où on peut afficher des fractales
+
 Compilation du projet :
 Grace a Gradle vous pouvez directement exécuter le programme avec './gradlew run'
 En plus de ca, nous avons fait en sorte que vous puissiez compiler tout le projet en un unique fichier .jar.
